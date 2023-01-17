@@ -1,0 +1,150 @@
+table {
+    width: 100%;  
+    float: left;  
+  }
+
+ 
+  .mat-toolbar-single-row {
+    display: flex;
+    float: left;
+    box-sizing: border-box;
+    padding: 0 16px;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.submit {
+    background-color: green;
+    margin-right: 3.2%;
+}
+
+.submit-button {
+    margin-right: 182px;
+    line-height: 2;
+    background-color: #298f5c;
+    width: 109px;
+    height: 40px;
+    color: #fafafa;
+    letter-spacing: normal;
+    text-align: center;
+}
+
+.mat-elevation-z8 th,td{
+    padding: 7px;
+}
+.mat-form{
+    width: 50% !important;
+}
+.newData{
+    word-break:break-all !important;
+}
+.mat-dialog-content1 {
+    position: relative;
+    flex: 1 1 auto;
+    margin: 0px 0px !important;
+}
+
+.input-w label {
+    display: inline-block;
+    vertical-align: middle;  
+}
+
+.input-w p {
+    display: inline-block;
+    width: 450px;
+}
+.col-span{
+   
+    float: left;
+}
+
+ .division p {
+    display: inline-block;
+    width: 280px;
+ }
+ .span{
+    width: 121%;
+ }
+
+.input-span{
+    margin-left: 134%;
+    width: 121%;
+    margin-right: 371px;
+}
+.right-span{
+    margin-left: -602px;
+    margin-top: 74px;
+    width: 299px;
+}
+.right-input-span{
+    margin-left: 51%;
+    width: 121%;
+    margin-top: 93px;
+}
+.dgms-right-span{
+    margin-top: 77px;
+    margin-left: -600px;
+}
+.plan-right-input-span{
+    margin-left: -276px;
+    margin-top: 191px;
+    width: 229px;
+}
+
+.date-right-input-span{
+    margin-top: 191px;
+    margin-left: 75px;
+}
+.retuen{
+    width: 123%;
+}
+.refNo{
+    margin-left: 348px;
+    width: 59%; 
+}
+.file-span{
+    margin-left: 591px;
+    width: 340px;
+}
+.lable-file{
+    margin-top: 95px;
+    margin-left: -224px;
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-form-field-disabled, ::ng-deep .mat-form-field-outline {
+    opacity: 0;
+    }
+
+    .right-col{
+    margin-left: 77px;
+    margin-top: -26px;
+    }
+
+    .left-col{
+        margin-left: 216px;
+    margin-top: -27px;
+    }
+ 
+    .left-data{
+        margin-top: 85px;
+        margin-left: 163px;
+    }
+    .place-size{
+        margin-left: 754px;
+        margin-top: -15px;
+    }
+    .examinerName{
+        margin-left: 311px;
+    }
+
+    .scrutinizerName{
+        margin-left: 311px;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 20px;
+    }

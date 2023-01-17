@@ -1,0 +1,219 @@
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      SURVEY RECORD
+    </mat-panel-title>
+    <mat-panel-description>
+
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <mat-card class = "mat-card">
+    <div class="grid-container" >
+      <div *ngFor="let item of dataSource3;let i = index">
+       
+      
+        <div   *ngIf = 'i%2 === 0'>
+          <label for="#your-input"><strong><div style="width: 250px; word-break: break-word;">{{item.Caption}} :</div></strong></label>
+          <p class="left-col">{{item.Answer1}}</p>
+        </div>
+    
+        <div   *ngIf = 'i%2 !== 0'>
+          <label for="#your-input"><strong><div style="width: 250px; word-break: break-word;">{{item.Caption}} :</div></strong></label>
+          <p class="left-col">{{item.Answer1}}</p>
+        </div>
+      
+      </div>
+    </div>
+  </mat-card>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        FIRST LEVEL EXIMINATION
+      </mat-panel-title>
+      <mat-panel-description>
+
+      </mat-panel-description>
+
+    </mat-expansion-panel-header>
+    <mat-card>
+      <form  [formGroup]="myForm" >
+        <div class="examinerName">
+          <label class="toolbarData"> Examiner(EX) </label> &nbsp; &nbsp; &nbsp;
+          <mat-form-field class="mat-form">
+            <input matInput formControlName="examinerName" placeholder="Chandrashekhar"  value="">
+          </mat-form-field>
+        </div>
+      
+        <br>
+        <div class="scrutinizerName">
+          <label class="toolbarData"> Scrutinizer(Scr) </label> &nbsp; &nbsp; &nbsp;
+        <mat-form-field class="mat-form">
+          <input matInput formControlName="ScrutinizerName" placeholder="Chandrashekhar"  value="">
+        </mat-form-field>
+        </div>
+      </form>
+      <ng-container >
+        <form
+        [formGroup]="form"
+        (ngSubmit)="onSubmit(form.value)"
+        class="form-horizontal"
+        >
+        <div style="width: 70%;">
+          <table class="mat-table" formArrayName="user" >
+            <tr class="mat-header-row">
+              <th class="mat-header-cell">Exam Item	</th>
+              <th class="mat-header-cell">Examiner</th>
+            </tr>
+            
+            <tr class="mat-row" class="container user-container"
+            *ngFor="let user of form.controls.user.controls; let i = index"
+            formGroupName="{{ i }}">
+            
+              <td class="mat-cell">
+                <div class="row">
+                 
+                    <strong>{{formDummyData[i].Caption}}</strong><br>
+                    <mat-form-field class="mat-form invisible">
+                      <input hidden="true" matInput   value="" formControlName="name">
+                    </mat-form-field>
+                 
+                  
+                </div>
+                
+                <table class="mat-table"  formArrayName="parendDatas">
+                <tr class="mat-row" 
+                class="col-6"
+                *ngFor="let parendData of user.controls.parendDatas.controls; let j = index"
+                formGroupName="{{ j }}">
+                  <td >
+                    <div class="container user-container">
+                      <div class="row">
+                       
+                         {{formDummyData[i]?.parendData[j]?.Caption}} <br>
+                         
+                          <mat-form-field class="mat-form invisible">
+                            <input hidden="true"  matInput    value="" formControlName="parendData">
+                          </mat-form-field>
+                       
+                      </div>
+                    </div>
+                  </td>
+                
+                </tr>
+                </table>
+              </td>
+              <td class="mat-cell">
+               <!-- <strong>
+                <span> 
+                  <mat-radio-group formControlName="examinerParentAn1">
+                   <mat-radio-button [disabled] = "disabled" value="Yes">Yes</mat-radio-button>&nbsp;
+                    <mat-radio-button [disabled] = "disabled" value="No">No</mat-radio-button>&nbsp;
+                  </mat-radio-group> 
+                  <mat-form-field class="mat-form">
+                    <input matInput placeholder="Comment" [readonly]="disabled"  value="" formControlName="name">
+                  </mat-form-field>
+                  <mat-icon (click)="openDialog1(form.value.user,i)">visibility</mat-icon>
+                </span> 
+              </strong> -->
+               
+              <table class="mat-table"  formArrayName="parendDatas">
+              <tr class="mat-row" 
+               class="col-6"
+              *ngFor="let parendData of user.controls.parendDatas.controls; let j = index"
+              formGroupName="{{ j }}">
+                <td >
+                   <mat-radio-group formControlName="examinerAns1">
+                        <mat-radio-button [disabled] = "disabled" value="Yes">Yes</mat-radio-button>&nbsp;
+                        <mat-radio-button [disabled] = "disabled" value="No">No</mat-radio-button>
+                      </mat-radio-group>  
+                    
+                       <mat-form-field class="mat-form">
+                        <input matInput placeholder="Comment" [readonly]="disabled"  value="" formControlName="parendData">
+                      </mat-form-field>
+                      <mat-icon (click)="openDialog2(form.value.user,i,j)">visibility</mat-icon>
+                       
+                       
+                 </td>
+               </tr>
+            </table>
+              </td>
+             
+            </tr>
+          
+           
+          
+          </table>
+        </div>
+        <diV style="width: 30%; display: flex">
+            <table class="mat-table" formArrayName="userscr" >
+           <tr class="mat-header-row">
+            <th class="mat-header-cell">Scrutinizer</th>
+          </tr>
+            <tr class="mat-row" class="container user-container"
+            *ngFor="let user of form.controls.userscr.controls; let i = index"
+            formGroupName="{{ i }}">
+            <td class="mat-cell">
+                <!-- <strong>
+              <span>
+                 <mat-radio-group formControlName="ScrParentAn1">
+                <mat-radio-button [disabled] = "disable" value="Yes">Yes</mat-radio-button>&nbsp;
+                <mat-radio-button [disabled] = "disable" value="No">No</mat-radio-button>
+              </mat-radio-group>
+              
+              <mat-form-field class="mat-form">
+                <input matInput placeholder="Comment" [readonly]="disable"  value="" formControlName="scrname">
+              </mat-form-field>
+              <mat-icon (click)="openDialog3(form.value.userscr,i)" >visibility</mat-icon>
+             </span> 
+            </strong> -->
+            
+          <table style="width: 108%;" class="mat-table"  formArrayName="scrDatas">
+          
+          <tr class="mat-row" 
+          class="col-6"
+          *ngFor="let scrData of user.controls.scrDatas.controls; let k = index"
+          formGroupName="{{ k }}">
+            <td >
+             
+                <span> <mat-radio-group formControlName="scrAns1">
+                    <mat-radio-button [disabled] = "disable" value="Yes">Yes</mat-radio-button>&nbsp;
+                    <mat-radio-button [disabled] = "disable" value="No">No</mat-radio-button>
+                  </mat-radio-group> 
+                   
+                   <mat-form-field class="mat-form">
+                    <input matInput placeholder="Comment" [readonly]="disable"  value="" formControlName="scrData">
+                  </mat-form-field>
+                  <mat-icon (click)="openDialog4(form.value.userscr,i,k)" >visibility</mat-icon>
+                 </span> 
+             </td>
+           </tr>
+           </table>
+          </td>
+          </tr>
+          
+     
+            </table>
+        </diV>
+        <ng-container matColumnDef="submit">
+        
+          <div >
+            <button [disabled] = "disable" mat-raised-button  style="margin-left: 268px;"
+              class="submit-button submit bhover float-right mb-4 mt-4" >Update
+            </button>
+            <button [disabled] = "disabled" mat-raised-button  
+              class="submit-button submit bhover float-right mb-4 mt-4">Update
+            </button>
+          </div>
+
+
+
+      </ng-container>
+    
+        </form>
+   
+       
+      </ng-container>
+    </mat-card>
+  </mat-expansion-panel>
+</mat-expansion-panel>

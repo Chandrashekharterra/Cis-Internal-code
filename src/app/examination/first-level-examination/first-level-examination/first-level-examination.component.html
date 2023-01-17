@@ -1,0 +1,801 @@
+<div mat-dialog-content class="mat-dialog-content1">
+  <div class="container-fluid pr-0" id="print-section">
+    <div class="row mx-0 tab-grid-remove">
+      <div class="col-lg-12">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              DIAGRAM
+            </mat-panel-title>
+            <mat-panel-description>
+
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <mat-card class = "mat-card">
+            <div class="grid-container" >
+              <span *ngFor="let item of dataSource2;let i = index">
+                  <div   *ngIf = 'i%2 === 0'>
+                    <label for="#your-input"><strong><div style="width: 250px; word-break: break-word;">{{item.Caption}} :</div></strong></label>
+                    <p class="left-col">{{item.Answer1}}</p>
+                  </div>
+                  <div   *ngIf = 'i%2 !== 0' >
+                    <label for="#your-input"><strong><div style="width: 250px; word-break: break-word;">{{item.Caption}} :</div></strong></label>
+                    <p class="left-col">{{item.Answer1}}</p>
+                  </div>
+              
+                </span>
+            </div>
+          </mat-card>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                FIRST LEVEL EXIMINATION
+              </mat-panel-title>
+              <mat-panel-description>
+  
+              </mat-panel-description>
+  
+            </mat-expansion-panel-header>
+            <mat-card>
+              <form  [formGroup]="myForm" >
+              <div class="examinerName">
+                <label class="toolbarData"> Examiner(EX) </label> &nbsp; &nbsp; &nbsp;
+                <mat-form-field class="mat-form">
+                  <input matInput formControlName="examinerName" placeholder="Chandrashekhar"  value="">
+                </mat-form-field>
+              </div>
+            
+              <br>
+              <div class="scrutinizerName">
+                <label class="toolbarData"> Scrutinizer(Scr) </label> &nbsp; &nbsp; &nbsp;
+              <mat-form-field class="mat-form">
+                <input matInput formControlName="ScrutinizerName" placeholder="Chandrashekhar"  value="">
+              </mat-form-field>
+              </div>
+            </form>
+              <ng-container *ngIf="editMode === false">
+                <mat-toolbar>
+                  <span class="toolbarData"> Examiner </span>
+                </mat-toolbar>
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  
+                  <!-- Position Column -->
+  
+  
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="Caption">
+                    <th mat-header-cell *matHeaderCellDef> Exam Item </th>
+                    <td mat-cell *matCellDef="let element"> {{element.Caption}} </td>
+                  </ng-container>
+  
+                  <!-- Answer2 Column -->
+                  <ng-container matColumnDef="Answer2">
+                    <th mat-header-cell *matHeaderCellDef> Comment </th>
+                    <td mat-cell *matCellDef="let element"> {{element.Answer2}} </td>
+                  </ng-container>
+  
+                  <!-- Symbol Column -->
+                  <ng-container matColumnDef="Answer1">
+                    <th mat-header-cell *matHeaderCellDef> Selection </th>
+                    <td mat-cell *matCellDef="let element"> {{element.Answer1}} </td>
+                  </ng-container>
+  
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+  
+              </ng-container>
+              <ng-container *ngIf="editMode === true">
+             
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                  <pre>{{dataSource | json}}</pre>
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="Caption">
+                    <th mat-header-cell *matHeaderCellDef class="example-full-width" width="30%"> Exam Item </th>
+                    <ng-container *matCellDef="let element">
+                          
+                      <td mat-cell > {{element.Caption}}  </td>
+                    </ng-container>
+  
+                  </ng-container>
+  
+  
+                  <!-- Symbol Column -->
+                  <form [formGroup]="addExaminerFormGroup" (ngSubmit)="onSubmit()">
+                    <ng-container matColumnDef="Answer1"  [formArrayName]="'option'">
+                      <th mat-header-cell *matHeaderCellDef width="10%"> </th>
+                      <ng-container *matCellDef="let element; let i = index;">
+                        <td mat-cell [formGroupName]="i">
+                          <mat-radio-group formControlName="options">
+                          <mat-radio-button [disabled] = "disabled" value="Yes">Yes</mat-radio-button>&nbsp;
+                          <mat-radio-button [disabled] = "disabled" value="NO">No</mat-radio-button>
+                        </mat-radio-group>
+                        </td>
+                      </ng-container>
+  
+                    </ng-container>
+  
+                    <!-- Answer2 Column -->
+                    <ng-container matColumnDef="Answer2" [formArrayName]="'Answer2'">
+                      <th mat-header-cell *matHeaderCellDef width="25%"> Examiner </th>
+                      <ng-container *matCellDef="let element ; let i = index;">
+                        <td mat-cell  [formGroupName]="i">
+                          <mat-form-field class="mat-form">
+                            <input matInput placeholder="Comment" [readonly]="disabled" value="" formControlName="Anss2"
+                              >
+                            <span *ngIf="longText.length > 30" class="newData">
+                              {{(readMore) ? longText : longText | slice:0:30}} <span *ngIf="!readMore">...</span>
+  
+                            </span>
+                          </mat-form-field>
+                          <mat-icon (click)="openDialogdigram(addExaminerFormGroup.value.Answer2,i)" >visibility</mat-icon>
+                        </td>
+                      </ng-container>
+  
+  
+                    </ng-container>
+                  </form>
+  
+  
+                  <!-- Symbol Column -->
+                  <form [formGroup]="addScrutinizerFormGroup" (ngSubmit)="onSubmit()">
+                  <ng-container matColumnDef="ans1" [formArrayName]="'option1'">
+                    <th mat-header-cell *matHeaderCellDef width="10%"> </th>
+                    <ng-container *matCellDef="let element;let i = index;" >
+                      <td mat-cell  [formGroupName]="i">
+                        <mat-radio-group formControlName="options1">
+                          <mat-radio-button value="Yes" [disabled] = "disable" >Yes</mat-radio-button>&nbsp;
+                          <mat-radio-button value="NO" [disabled] = "disable" >No</mat-radio-button>
+                        </mat-radio-group>
+                      </td>
+                    </ng-container>
+  
+                  </ng-container>
+  
+                  <!-- Answer2 Column -->
+                  <ng-container matColumnDef="ANS3" [formArrayName]="'Answer3'">
+                    <th mat-header-cell *matHeaderCellDef width="25%"> Scrutinizer </th>
+                    <ng-container *matCellDef="let element;let i = index;">
+                      <td mat-cell  [formGroupName]="i">
+                        <mat-form-field class="mat-form">
+                          <input matInput placeholder="Comment" [readonly]="disable"  value="" formControlName="Anss3">
+                        </mat-form-field>
+                        <mat-icon  (click)="openDialogdigram1(addScrutinizerFormGroup.value.Answer3,i)" >visibility</mat-icon>
+                      </td>
+                    </ng-container>
+                  </ng-container>
+                </form>
+  
+                  <ng-container matColumnDef="submit">
+                    <td mat-footer-cell *matFooterCellDef colspan="5">
+                      <div style="width: 100%;">
+                        <button [disabled] = "disable" mat-raised-button (click)="submitExamination()"
+                          class="submit-button submit bhover float-right mb-4 mt-4" style="margin-left: 268px;">Update
+                        </button>
+                        <button [disabled] = "disabled" mat-raised-button (click)="submitExamination()"
+                          class="submit-button submit bhover float-right mb-4 mt-4">Update
+                        </button>
+                      </div>
+  
+  
+                    </td>
+                  </ng-container>
+  
+  
+  
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                  </tr>
+                  <tr mat-footer-row *matFooterRowDef="['submit']"></tr>
+  
+                </table>
+  
+              </ng-container>
+            </mat-card>
+          </mat-expansion-panel>
+        </mat-expansion-panel>
+      <app-child></app-child>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            SECTIONAL TITLE PLAN
+          </mat-panel-title>
+          <mat-panel-description>
+
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-card class = "mat-card">
+          <div class="grid-container" >
+            <div *ngFor="let item of dataSource4;let i = index">
+             
+            
+              <div   *ngIf = 'i%2 === 0'>
+                <label for="#your-input"><strong><div style="width: 250px; word-break: break-word;">{{item.Caption}} :</div></strong></label>
+                <p class="left-col">{{item.Answer1}}</p>
+              </div>
+          
+              <div   *ngIf = 'i%2 !== 0' >
+                <label for="#your-input"><strong><div style="width: 250px; word-break: break-word;">{{item.Caption}} :</div></strong></label>
+                <p class="left-col">{{item.Answer1}}</p>
+              </div>
+            
+            </div>
+          </div>
+        </mat-card>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              FIRST LEVEL EXIMINATION
+            </mat-panel-title>
+            <mat-panel-description>
+
+            </mat-panel-description>
+
+          </mat-expansion-panel-header>
+          <mat-card>
+            <form  [formGroup]="myForm" >
+              <div class="examinerName">
+                <label class="toolbarData"> Examiner(EX) </label> &nbsp; &nbsp; &nbsp;
+                <mat-form-field class="mat-form">
+                  <input matInput formControlName="examinerName" placeholder="Chandrashekhar"  value="">
+                </mat-form-field>
+              </div>
+            
+              <br>
+              <div class="scrutinizerName">
+                <label class="toolbarData"> Scrutinizer(Scr) </label> &nbsp; &nbsp; &nbsp;
+              <mat-form-field class="mat-form">
+                <input matInput formControlName="ScrutinizerName" placeholder="Chandrashekhar"  value="">
+              </mat-form-field>
+              </div>
+            </form>
+            
+            <ng-container *ngIf="editMode === false">
+              <mat-toolbar>
+                <span class="toolbarData"> Examiner </span>
+              </mat-toolbar>
+              <table mat-table [dataSource]="titlePlandataSource" class="mat-elevation-z8">
+
+                <!-- Position Column -->
+
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="Caption">
+                  <th mat-header-cell *matHeaderCellDef> Exam Item </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Caption}} </td>
+                </ng-container>
+
+                <!-- Answer2 Column -->
+                <ng-container matColumnDef="Answer2">
+                  <th mat-header-cell *matHeaderCellDef> Comment </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Answer2}} </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="Answer1">
+                  <th mat-header-cell *matHeaderCellDef> Selection </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Answer1}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+
+            </ng-container>
+            <ng-container *ngIf="editMode === true">
+
+              <table mat-table [dataSource]="titlePlandataSource" class="mat-elevation-z8">
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="Caption">
+                  <th mat-header-cell *matHeaderCellDef class="example-full-width" width="30%"> Exam Item </th>
+                  <ng-container *matCellDef="let element">
+                        
+                    <td mat-cell > {{element.Caption}}  </td>
+                  </ng-container>
+
+                </ng-container>
+
+
+                <!-- Symbol Column -->
+                <form [formGroup]="addExaminersectionalFormGroup" (ngSubmit)="onSubmit()">
+                  <ng-container matColumnDef="Answer1"  [formArrayName]="'optionsectional'">
+                    <th mat-header-cell *matHeaderCellDef width="10%"> </th>
+                    <ng-container *matCellDef="let element; let i = index;">
+                      <td mat-cell [formGroupName]="i">
+                        <mat-radio-group formControlName="optionssectional">
+                        <mat-radio-button [disabled] = "disabled" value="Yes">Yes</mat-radio-button>&nbsp;
+                        <mat-radio-button [disabled] = "disabled" value="NO">No</mat-radio-button>
+                      </mat-radio-group>
+                      </td>
+                    </ng-container>
+
+                  </ng-container>
+
+                  <!-- Answer2 Column -->
+                  <ng-container matColumnDef="Answer2" [formArrayName]="'Answersectional'">
+                    <th mat-header-cell *matHeaderCellDef width="25%"> Examiner </th>
+                    <ng-container *matCellDef="let element ; let i = index;">
+                      <td mat-cell  [formGroupName]="i">
+                        <mat-form-field class="mat-form">
+                          <input matInput placeholder="Comment" [readonly]="disabled" value="" formControlName="Anss3sectional"
+                            >
+                          <span *ngIf="longText.length > 30" class="newData">
+                            {{(readMore) ? longText : longText | slice:0:30}} <span *ngIf="!readMore">...</span>
+
+                          </span>
+                          
+
+                        </mat-form-field>
+                        <mat-icon (click)="openDialogsectionalEx(addExaminersectionalFormGroup.value.Answersectional,i)" >visibility</mat-icon>
+                      </td>
+                    </ng-container>
+
+
+                  </ng-container>
+                </form>
+
+
+                <!-- Symbol Column -->
+                <form [formGroup]="addScrutinizersectionalFormGroup" (ngSubmit)="onSubmit()">
+                <ng-container matColumnDef="ans1" [formArrayName]="'option1sectional1'">
+                  <th mat-header-cell *matHeaderCellDef width="10%"> </th>
+                  <ng-container *matCellDef="let element;let i = index;" >
+                    <td mat-cell  [formGroupName]="i">
+                      <mat-radio-group formControlName="optionssectional1">
+                        <mat-radio-button value="Yes" [disabled] = "disable" >Yes</mat-radio-button>&nbsp;
+                        <mat-radio-button value="NO" [disabled] = "disable" >No</mat-radio-button>
+                      </mat-radio-group>
+                    </td>
+                  </ng-container>
+
+                </ng-container>
+
+                <!-- Answer2 Column -->
+                <ng-container matColumnDef="ANS3" [formArrayName]="'Answer3sectional1'">
+                  <th mat-header-cell *matHeaderCellDef width="25%"> Scrutinizer </th>
+                  <ng-container *matCellDef="let element;let i = index;">
+                    <td mat-cell  [formGroupName]="i">
+                      <mat-form-field class="mat-form">
+                        <input matInput placeholder="Comment" [readonly]="disable"  value="" formControlName="Anss3sectional1">
+                      </mat-form-field>
+                      <mat-icon  (click)="openDialogsectionalSc(addScrutinizersectionalFormGroup.value.Answer3sectional1,i)" >visibility</mat-icon>
+                    </td>
+                  </ng-container>
+                </ng-container>
+              </form>
+
+                <ng-container matColumnDef="submit">
+                  <td mat-footer-cell *matFooterCellDef colspan="5">
+                    <div style="width: 100%;">
+                      <button [disabled] = "disable" mat-raised-button (click)="submitExamination()"
+                        class="submit-button submit bhover float-right mb-4 mt-4" style="margin-left: 268px;">Update
+                      </button>
+                      <button [disabled] = "disabled" mat-raised-button (click)="submitExamination()"
+                        class="submit-button submit bhover float-right mb-4 mt-4">Update
+                      </button>
+                    </div>
+
+
+                  </td>
+                </ng-container>
+
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+                <tr mat-footer-row *matFooterRowDef="['submit']"></tr>
+
+              </table>
+
+            </ng-container>
+          </mat-card>
+        </mat-expansion-panel>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+           GENERAL PLAN
+          </mat-panel-title>
+          <mat-panel-description>
+
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-card class = "mat-card">
+          <div class="grid-container" >
+            <div *ngFor="let item of dataSource6;let i = index">
+             
+            
+              <div   *ngIf = 'i%2 === 0'>
+                <label for="#your-input"><strong><div style="width: 250px; word-break: break-word;">{{item.Caption}} :</div></strong></label>
+                <p class="left-col">{{item.Answer1}}</p>
+              </div>
+              <div   *ngIf = 'i%2 !== 0'>
+                <label for="#your-input"><strong><div style="width: 250px; word-break: break-word;">{{item.Caption}} :</div></strong></label>
+                <p class="left-col">{{item.Answer1}}</p>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              FIRST LEVEL EXIMINATION
+            </mat-panel-title>
+            <mat-panel-description>
+
+            </mat-panel-description>
+
+          </mat-expansion-panel-header>
+          <mat-card>
+            <form  [formGroup]="myForm" >
+              <div class="examinerName">
+                <label class="toolbarData"> Examiner(EX) </label> &nbsp; &nbsp; &nbsp;
+                <mat-form-field class="mat-form">
+                  <input matInput formControlName="examinerName" placeholder="Chandrashekhar"  value="">
+                </mat-form-field>
+              </div>
+            
+              <br>
+              <div class="scrutinizerName">
+                <label class="toolbarData"> Scrutinizer(Scr) </label> &nbsp; &nbsp; &nbsp;
+              <mat-form-field class="mat-form">
+                <input matInput formControlName="ScrutinizerName" placeholder="Chandrashekhar"  value="">
+              </mat-form-field>
+              </div>
+            </form>
+            
+            <ng-container *ngIf="editMode === false">
+              <mat-toolbar>
+                <span class="toolbarData"> Examiner </span>
+              </mat-toolbar>
+              <table mat-table [dataSource]="generalPlandataSource" class="mat-elevation-z8">
+
+                <!-- Position Column -->
+
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="Caption">
+                  <th mat-header-cell *matHeaderCellDef> Exam Item </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Caption}} </td>
+                </ng-container>
+
+                <!-- Answer2 Column -->
+                <ng-container matColumnDef="Answer2">
+                  <th mat-header-cell *matHeaderCellDef> Comment </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Answer2}} </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="Answer1">
+                  <th mat-header-cell *matHeaderCellDef> Selection </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Answer1}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+
+            </ng-container>
+            <ng-container *ngIf="editMode === true">
+
+              <table mat-table [dataSource]="generalPlandataSource" class="mat-elevation-z8">
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="Caption">
+                  <th mat-header-cell *matHeaderCellDef class="example-full-width" width="30%"> Exam Item </th>
+                  <ng-container *matCellDef="let element">
+                        
+                    <td mat-cell > {{element.Caption}}  </td>
+                  </ng-container>
+
+                </ng-container>
+
+
+                <!-- Symbol Column -->
+                <form [formGroup]="addExaminerGeneralPlanFormGroup" (ngSubmit)="onSubmit()">
+                  <ng-container matColumnDef="Answer1"  [formArrayName]="'optionGeneralPlan'">
+                    <th mat-header-cell *matHeaderCellDef width="10%"> </th>
+                    <ng-container *matCellDef="let element; let i = index;">
+                      <td mat-cell [formGroupName]="i">
+                        <mat-radio-group formControlName="optionsGereralPlan1">
+                        <mat-radio-button [disabled] = "disabled" value="Yes">Yes</mat-radio-button>&nbsp;
+                        <mat-radio-button [disabled] = "disabled" value="NO">No</mat-radio-button>
+                      </mat-radio-group>
+                      </td>
+                    </ng-container>
+
+                  </ng-container>
+
+                  <!-- Answer2 Column -->
+                  <ng-container matColumnDef="Answer2" [formArrayName]="'AnswerGeneralPlan'">
+                    <th mat-header-cell *matHeaderCellDef width="25%"> Examiner </th>
+                    <ng-container *matCellDef="let element ; let i = index;">
+                      <td mat-cell  [formGroupName]="i">
+                        <mat-form-field class="mat-form">
+                          <input matInput placeholder="Comment" [readonly]="disabled" value="" formControlName="Anss3GereralPlan1"
+                            >
+                          <span *ngIf="longText.length > 30" class="newData">
+                            {{(readMore) ? longText : longText | slice:0:30}} <span *ngIf="!readMore">...</span>
+
+                          </span>
+                         
+
+                        </mat-form-field>
+                        <mat-icon (click)="openDialogGereralPlanEx(addExaminerGeneralPlanFormGroup.value.AnswerGeneralPlan,i)" >visibility</mat-icon>
+                      </td>
+                    </ng-container>
+
+
+                  </ng-container>
+                </form>
+
+
+                <!-- Symbol Column -->
+                <form [formGroup]="addScrutinizerGeneralPlanFormGroup" (ngSubmit)="onSubmit()">
+                <ng-container matColumnDef="ans1" [formArrayName]="'optionGeneralPlan1'">
+                  <th mat-header-cell *matHeaderCellDef width="10%"> </th>
+                  <ng-container *matCellDef="let element;let i = index;" >
+                    <td mat-cell  [formGroupName]="i">
+                      <mat-radio-group formControlName="optionsGereralPlan">
+                        <mat-radio-button value="Yes" [disabled] = "disable" >Yes</mat-radio-button>&nbsp;
+                        <mat-radio-button value="NO" [disabled] = "disable" >No</mat-radio-button>
+                      </mat-radio-group>
+                    </td>
+                  </ng-container>
+
+                </ng-container>
+
+                <!-- Answer2 Column -->
+                <ng-container matColumnDef="ANS3" [formArrayName]="'AnswerGeneralPlan1'">
+                  <th mat-header-cell *matHeaderCellDef width="25%"> Scrutinizer </th>
+                  <ng-container *matCellDef="let element;let i = index;">
+                    <td mat-cell  [formGroupName]="i">
+                      <mat-form-field class="mat-form">
+                        <input matInput placeholder="Comment" [readonly]="disable"  value="" formControlName="Anss3GereralPlan">
+                      </mat-form-field>
+                      <mat-icon  (click)="openDialogGereralPlanSc(addScrutinizerGeneralPlanFormGroup.value.AnswerGeneralPlan1,i)" >visibility</mat-icon>
+                    </td>
+                  </ng-container>
+                </ng-container>
+              </form>
+
+                <ng-container matColumnDef="submit">
+                  <td mat-footer-cell *matFooterCellDef colspan="5">
+                    <div style="width: 100%;">
+                      <button [disabled] = "disable" mat-raised-button (click)="submitExamination()"
+                        class="submit-button submit bhover float-right mb-4 mt-4" style="margin-left: 268px;">Update
+                      </button>
+                      <button [disabled] = "disabled" mat-raised-button (click)="submitExamination()"
+                        class="submit-button submit bhover float-right mb-4 mt-4">Update
+                      </button>
+                    </div>
+
+
+                  </td>
+                </ng-container>
+
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+                <tr mat-footer-row *matFooterRowDef="['submit']"></tr>
+
+              </table>
+
+            </ng-container>
+          </mat-card>
+        </mat-expansion-panel>
+      
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+          SERVITUDE PLAN
+          </mat-panel-title>
+          <mat-panel-description>
+
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+       
+        <mat-card class = "mat-card">
+       
+            <div class="grid-container" >
+              <div *ngFor="let item of dataSource7;let i = index">
+               
+              
+                    <div   *ngIf = 'i%2 === 0'>
+                    <label for="#your-input"><strong><div style="width: 250px; word-break: break-word;">{{item.Caption}} :</div></strong></label>
+                    <p class="left-col">{{item.Answer1}}</p>
+                  </div>
+                
+                  <div   *ngIf = 'i%2 !== 0' >
+                    <label for="#your-input"><strong><div style="width: 250px; word-break: break-word;">{{item.Caption}} :</div></strong></label>
+                    <p class="left-col">{{item.Answer1}}</p>
+                  </div>
+              
+              </div>
+            </div>
+          
+          
+        </mat-card>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              FIRST LEVEL EXIMINATION
+            </mat-panel-title>
+            <mat-panel-description>
+
+            </mat-panel-description>
+
+          </mat-expansion-panel-header>
+          <mat-card>
+            <form  [formGroup]="myForm" >
+              <div class="examinerName">
+                <label class="toolbarData"> Examiner(EX) </label> &nbsp; &nbsp; &nbsp;
+                <mat-form-field class="mat-form">
+                  <input matInput formControlName="examinerName" placeholder="Chandrashekhar"  value="">
+                </mat-form-field>
+              </div>
+            
+              <br>
+              <div class="scrutinizerName">
+                <label class="toolbarData"> Scrutinizer(Scr) </label> &nbsp; &nbsp; &nbsp;
+              <mat-form-field class="mat-form">
+                <input matInput formControlName="ScrutinizerName" placeholder="Chandrashekhar"  value="">
+              </mat-form-field>
+              </div>
+            </form>
+            
+            <ng-container *ngIf="editMode === false">
+              <mat-toolbar>
+                <span class="toolbarData"> Examiner </span>
+              </mat-toolbar>
+              <table mat-table [dataSource]="servituePlandataSource" class="mat-elevation-z8">
+
+                <!-- Position Column -->
+
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="Caption">
+                  <th mat-header-cell *matHeaderCellDef> Exam Item </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Caption}} </td>
+                </ng-container>
+
+                <!-- Answer2 Column -->
+                <ng-container matColumnDef="Answer2">
+                  <th mat-header-cell *matHeaderCellDef> Comment </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Answer2}} </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="Answer1">
+                  <th mat-header-cell *matHeaderCellDef> Selection </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Answer1}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+
+            </ng-container>
+            <ng-container *ngIf="editMode === true">
+
+              <table mat-table [dataSource]="servituePlandataSource" class="mat-elevation-z8">
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="Caption">
+                  <th mat-header-cell *matHeaderCellDef class="example-full-width" width="30%"> Exam Item </th>
+                  <ng-container *matCellDef="let element">
+                        
+                    <td mat-cell > {{element.Caption}}  </td>
+                  </ng-container>
+
+                </ng-container>
+
+
+                <!-- Symbol Column -->
+                <form [formGroup]="addExaminerServitudePlanFormGroup" (ngSubmit)="onSubmit()">
+                  <ng-container matColumnDef="Answer1"  [formArrayName]="'optionServitudePlan'">
+                    <th mat-header-cell *matHeaderCellDef width="10%"> </th>
+                    <ng-container *matCellDef="let element; let i = index;">
+                      <td mat-cell [formGroupName]="i">
+                        <mat-radio-group formControlName="optionsServitudePlan">
+                        <mat-radio-button [disabled] = "disabled" value="Yes">Yes</mat-radio-button>&nbsp;
+                        <mat-radio-button [disabled] = "disabled" value="NO">No</mat-radio-button>
+                      </mat-radio-group>
+                      </td>
+                    </ng-container>
+
+                  </ng-container>
+
+                  <!-- Answer2 Column -->
+                  <ng-container matColumnDef="Answer2" [formArrayName]="'AnswerServitudePlan'">
+                    <th mat-header-cell *matHeaderCellDef width="25%"> Examiner </th>
+                    <ng-container *matCellDef="let element ; let i = index;">
+                      <td mat-cell  [formGroupName]="i">
+                        <mat-form-field class="mat-form">
+                          <input matInput placeholder="Comment" [readonly]="disabled" value="" formControlName="Anss3ServitudePlan"
+                            >
+                          <span *ngIf="longText.length > 30" class="newData">
+                            {{(readMore) ? longText : longText | slice:0:30}} <span *ngIf="!readMore">...</span>
+
+                          </span> 
+                        
+
+                        </mat-form-field>
+                        <mat-icon (click)="openDialog1(addExaminerServitudePlanFormGroup.value.AnswerServitudePlan,i)" >visibility</mat-icon>
+                      </td>
+                    </ng-container>
+
+
+                  </ng-container>
+                </form>
+
+
+                <!-- Symbol Column -->
+                <form [formGroup]="addScrutinizerServitudePlanFormGroup" (ngSubmit)="onSubmit()">
+                <ng-container matColumnDef="ans1" [formArrayName]="'optionServitudePlan1'">
+                  <th mat-header-cell *matHeaderCellDef width="10%"> </th>
+                  <ng-container *matCellDef="let element;let i = index;" >
+                    <td mat-cell  [formGroupName]="i">
+                      <mat-radio-group formControlName="optionsServitudePlan1">
+                        <mat-radio-button value="Yes" [disabled] = "disable" >Yes</mat-radio-button>&nbsp;
+                        <mat-radio-button value="NO" [disabled] = "disable" >No</mat-radio-button>
+                      </mat-radio-group>
+                    </td>
+                  </ng-container>
+
+                </ng-container>
+
+                <!-- Answer2 Column -->
+                <ng-container matColumnDef="ANS3" [formArrayName]="'AnswerServitudePlan1'">
+                  <th mat-header-cell *matHeaderCellDef width="25%"> Scrutinizer </th>
+                  <ng-container *matCellDef="let element;let i = index;">
+                    <td mat-cell  [formGroupName]="i">
+                      <mat-form-field class="mat-form">
+                        <input matInput placeholder="Comment" [readonly]="disable"  value="" formControlName="Anss3ServitudePlan1">
+                      </mat-form-field>
+                      <mat-icon  (click)="openDialog(addScrutinizerServitudePlanFormGroup.value.AnswerServitudePlan1,i)" >visibility</mat-icon>
+                    </td>
+                  </ng-container>
+                </ng-container>
+              </form>
+
+                <ng-container matColumnDef="submit">
+                  <td mat-footer-cell *matFooterCellDef colspan="5">
+                    <div style="width: 100%;">
+                      <button [disabled] = "disable" mat-raised-button (click)="submitExamination()"
+                        class="submit-button submit bhover float-right mb-4 mt-4" style="margin-left: 268px;">Update
+                      </button>
+                      <button [disabled] = "disabled" mat-raised-button (click)="submitExamination()"
+                        class="submit-button submit bhover float-right mb-4 mt-4">Update
+                      </button>
+                    </div>
+
+
+                  </td>
+                </ng-container>
+
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+                <tr mat-footer-row *matFooterRowDef="['submit']"></tr>
+
+              </table>
+
+            </ng-container>
+          </mat-card>
+        </mat-expansion-panel>
+      
+      </mat-expansion-panel>
+       
+       
+      </div>
+    </div>
+  </div>
+</div>
