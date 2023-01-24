@@ -19,6 +19,7 @@ export const environment = {
   //  workflowStudioUrl: 'http://localhost:8001',
     //portalUrl: 'http://10.10.20.204/CIS-Portal/',
     portalUrl: 'http://10.1.15.216/CIS-Portal/',
+    docketListUrl: 'http://10.1.15.227:8092/api/v1/',
 
 
     viewMapServerUrl: 'http://10.1.15.220:8088/ang_mapview/#/mapview?',
@@ -514,6 +515,7 @@ export const environment = {
     getLdgResDetailDoc: 'lodgement/getLdgResDetailDoc?documentId=',
     getLodgementsList: 'lodgement/listLodgementDraft?processId=',
     checkoutLodgementDraft: 'lodgement/checkoutLodgementDraft?draftId=',
+    docketDraft: 'docketv2/getDocketById?Id=455',
     getLodgementDraftByWorkFlowId: 'lodgement/draft?workflowId=',
     deleteLodgementDraftByDraftId: 'lodgement/draft/',
     getALlDocumentForRequest: 'lodgement/getAllDocumentForRequest?requestId=',

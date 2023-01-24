@@ -9,6 +9,8 @@ import {
 } from '@angular/forms';
 import { PopUpComponent } from '../pop-up/pop-up.component';
 import { MatDialog } from '@angular/material/dialog';
+import { RestcallService } from '../../services/restcall.service';
+import { LoaderService } from '../../services/loader.service';
 
 @Component({
   selector: 'app-child',
@@ -34,12 +36,19 @@ export class ChildComponent implements OnInit {
   disabled: boolean;
   question: any;
   myForm: FormGroup;
+  questions$1: any;
+  examinerName: any;
+  scrutinizerName: any;
 
 
  
 
 
-  constructor(private service: QuestionService, private fb: FormBuilder,private  dialogRef : MatDialog) {
+  constructor(private service: QuestionService,
+    private fb: FormBuilder,
+    private  dialogRef : MatDialog,
+    private restService: RestcallService,
+    private loaderService: LoaderService,) {
     this.form = fb.group({
       user: fb.array([]),
       userscr: fb.array([]),
@@ -61,75 +70,77 @@ export class ChildComponent implements OnInit {
   
 
   ngOnInit(): void {
-    this.question = this.service.getUsers();
+    this.getdocketList()
+// const data23 =  this.questions$1
+  //  this.question = this.service.getUsers();
 
     this.myForm = this.fb.group({
-      ScrutinizerName: '',
+      scrutinizerName: '',
       examinerName:''
       
     });
-    this.myForm.patchValue( this.question[0])
-    this.questions$ = this.service.getUsers()
-    const developer1 =  this.questions$.filter(member =>  member.DocketTypeId === 2 && member.UserRole === 0 &&  member.AttributeType === 1)
-    this.dataSource3 = developer1;
+    //this.myForm.patchValue( this.question[0])
+ //   this.questions$ = this.service.getUsers()
+  //   const developer1 =  this.questions$.filter(member =>  member.DocketTypeId === 2 && member.UserRole === 0 &&  member.AttributeType === 1)
+  //   this.dataSource3 = developer1;
 
 
-    const userRole1 = sessionStorage.getItem('userInfo')
-    const data = JSON.parse(userRole1).userRoles
-    data.forEach((item:any)=>{
-      if(item.userRoleId === 1244){
-        this.disable = true
-      }
-      if(item.userRoleId === 1246){
-        this.disabled = true
-      }
-    })
+  //   const userRole1 = sessionStorage.getItem('userInfo')
+  //   const data = JSON.parse(userRole1).userRoles
+  //   data.forEach((item:any)=>{
+  //     if(item.userRoleId === 1244){
+  //       this.disable = true
+  //     }
+  //     if(item.userRoleId === 1246){
+  //       this.disabled = true
+  //     }
+  //   })
 
 
-    let survayData = this.questions$.filter(member => member.DocketTypeId === 2 && member.UserRole === 1244 && member.AttributeType === 0)
-    let scrutinizorData = this.questions$.filter(member => member.DocketTypeId === 2 && member.UserRole === 1246 && member.AttributeType === 0)
-    const newData = scrutinizorData.map(object => {
-      return {...object, scriData: []};
-    });
-     newData?.forEach((item)=>{
-      this.questions$.forEach((i)=>{
-        if(i.DocketTypeId === 2 && i.UserRole === 1246 && item.DocketListID === i.ParentId){
-           item.scriData.push(i)
-        }
-      })
-    })
+  //   let survayData = this.questions$.filter(member => member.DocketTypeId === 2 && member.UserRole === 1244 && member.AttributeType === 0)
+  //   let scrutinizorData = this.questions$.filter(member => member.DocketTypeId === 2 && member.UserRole === 1246 && member.AttributeType === 0)
+  //   const newData = scrutinizorData.map(object => {
+  //     return {...object, scriData: []};
+  //   });
+  //    newData?.forEach((item)=>{
+  //     this.questions$.forEach((i)=>{
+  //       if(i.DocketTypeId === 2 && i.UserRole === 1246 && item.DocketListID === i.ParentId){
+  //          item.scriData.push(i)
+  //       }
+  //     })
+  //   })
     
-  const  arrayObj = newData?.map(item => {
-      return {
-        ...item,
-        Answer3: item.Answer1,
-        Answer4: item.Answer2
-      };
-    });
-  const  result = arrayObj.map(({Answer3,Answer4,scriData},i) => ({Answer3,Answer4,scriData, ...survayData[i]}))
+  // const  arrayObj = newData?.map(item => {
+  //     return {
+  //       ...item,
+  //       Answer3: item.Answer1,
+  //       Answer4: item.Answer2
+  //     };
+  //   });
+  // const  result = arrayObj.map(({Answer3,Answer4,scriData},i) => ({Answer3,Answer4,scriData, ...survayData[i]}))
       
-      const arrWithColor = result.map(object => {
-        return {...object, parendData: []};
-      });
-        let parentData = arrWithColor.forEach((item)=>{
-        this.questions$.forEach((i)=>{
-          if(i.DocketTypeId === 2 && i.UserRole === 1244 && item.DocketListID === i.ParentId){
-             item.parendData.push(i)
-          }
-        })
-      })
+  //     const arrWithColor = result.map(object => {
+  //       return {...object, parendData: []};
+  //     });
+  //       let parentData = arrWithColor.forEach((item)=>{
+  //       this.questions$.forEach((i)=>{
+  //         if(i.DocketTypeId === 2 && i.UserRole === 1244 && item.DocketListID === i.ParentId){
+  //            item.parendData.push(i)
+  //         }
+  //       })
+  //     })
      
-      this.survaydataSource = arrWithColor;
-      this.formDummyData = arrWithColor;
-      if (this.formDummyData) {
-        this.formDummyData.forEach((user) => {
-          this.addUser(user);
-          this.addUserScr(user)
-        });
-      } else {
-        this.addUser();
-        this.addUserScr();
-      }
+  //     this.survaydataSource = arrWithColor;
+  //     this.formDummyData = arrWithColor;
+  //     if (this.formDummyData) {
+  //       this.formDummyData.forEach((user) => {
+  //         this.addUser(user);
+  //         this.addUserScr(user)
+  //       });
+  //     } else {
+  //       this.addUser();
+  //       this.addUserScr();
+  //     }
 
 
      
@@ -270,6 +281,88 @@ export class ChildComponent implements OnInit {
 
     
   }
+
+
+  
+  getdocketList() {
+    this.loaderService.display(true);
+    this.restService.getdocketList().subscribe(response => {
+    
+      if (response.code === 50000) {
+        this.loaderService.display(false);
+        return;
+      }
+       else {
+        console.log(response,'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq')
+        this.examinerName = response.examinerName
+        this.scrutinizerName = response.scrutinizerName
+        this.myForm.patchValue({examinerName:this.examinerName,scrutinizerName: this.scrutinizerName})
+        //this.myForm.patchValue(response.scrutinizerName)
+        this.questions$ = response.attributeList;
+        const developer1 =  this.questions$.filter(member =>  member.DocketTypeId === 2 && member.UserRole === 0 &&  member.AttributeType === 1)
+        this.dataSource3 = developer1;
+        debugger
+        const userRole1 = sessionStorage.getItem('userInfo')
+        const data = JSON.parse(userRole1).userRoles
+        data.forEach((item:any)=>{
+          if(item.userRoleId === 1244){
+            this.disable = true
+          }
+          if(item.userRoleId === 1246){
+            this.disabled = true
+          }
+        })
+    
+    
+        let survayData = this.questions$.filter(member => member.DocketTypeId === 2 && member.UserRole === 1244 && member.AttributeType === 0)
+        let scrutinizorData = this.questions$.filter(member => member.DocketTypeId === 2 && member.UserRole === 1246 && member.AttributeType === 0)
+        const newData = scrutinizorData.map(object => {
+          return {...object, scriData: []};
+        });
+         newData?.forEach((item)=>{
+          this.questions$.forEach((i)=>{
+            if(i.DocketTypeId === 2 && i.UserRole === 1246 && item.DocketListID === i.ParentId){
+               item.scriData.push(i)
+            }
+          })
+        })
+        
+      const  arrayObj = newData?.map(item => {
+          return {
+            ...item,
+            Answer3: item.Answer1,
+            Answer4: item.Answer2
+          };
+        });
+      const  result = arrayObj.map(({Answer3,Answer4,scriData},i) => ({Answer3,Answer4,scriData, ...survayData[i]}))
+          
+          const arrWithColor = result.map(object => {
+            return {...object, parendData: []};
+          });
+            let parentData = arrWithColor.forEach((item)=>{
+            this.questions$.forEach((i)=>{
+              if(i.DocketTypeId === 2 && i.UserRole === 1244 && item.DocketListID === i.ParentId){
+                 item.parendData.push(i)
+              }
+            })
+          })
+         
+          this.survaydataSource = arrWithColor;
+          this.formDummyData = arrWithColor;
+          if (this.formDummyData) {
+            this.formDummyData.forEach((user) => {
+              this.addUser(user);
+              this.addUserScr(user)
+            });
+          } else {
+            this.addUser();
+            this.addUserScr();
+          }
+    
+    
+       }
+      })
+    }
 
 
 

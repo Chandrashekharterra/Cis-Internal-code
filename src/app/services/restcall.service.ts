@@ -1683,6 +1683,9 @@ export class RestcallService extends BaseService {
     getLodgementsList(draftId, userId) {
         return this.get(new HttpParams(), environment.uamBaseUrl + environment.getLodgementsList + draftId + '&userId=' + userId);
     }
+    getdocketList() {
+        return this.get(new HttpParams(), environment.docketListUrl + environment.docketDraft);
+    }
 
     checkoutLodgementDraft(draftId, workflowId) {
         return this.get(new HttpParams(), environment.uamBaseUrl + environment.checkoutLodgementDraft + draftId + '&workflowId=' + workflowId);
