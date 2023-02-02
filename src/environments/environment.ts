@@ -536,6 +536,7 @@ export const environment = {
 
     /* Examination */
      saveExaminatiion: 'examination/saveExamination',
+     saveDocket: 'docketv2/updateDocket/?Id=455',
      getExaminationById: 'examination/getExaminationById?examinationId=',
      getExaminationByWorkflowId: 'examination/getExaminationByWorkflowId?workflowId=',
 

@@ -70,15 +70,16 @@ export class ChildComponent implements OnInit {
   
 
   ngOnInit(): void {
-    this.getdocketList()
-// const data23 =  this.questions$1
-  //  this.question = this.service.getUsers();
-
     this.myForm = this.fb.group({
       scrutinizerName: '',
       examinerName:''
       
     });
+    this.getdocketList()
+// const data23 =  this.questions$1
+  //  this.question = this.service.getUsers();
+
+  
     //this.myForm.patchValue( this.question[0])
  //   this.questions$ = this.service.getUsers()
   //   const developer1 =  this.questions$.filter(member =>  member.DocketTypeId === 2 && member.UserRole === 0 &&  member.AttributeType === 1)
@@ -296,12 +297,16 @@ export class ChildComponent implements OnInit {
         console.log(response,'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq')
         this.examinerName = response.examinerName
         this.scrutinizerName = response.scrutinizerName
+        // this.myForm = this.fb.group({
+        //   scrutinizerName: '',
+        //   examinerName:''
+          
+        // });
         this.myForm.patchValue({examinerName:this.examinerName,scrutinizerName: this.scrutinizerName})
         //this.myForm.patchValue(response.scrutinizerName)
         this.questions$ = response.attributeList;
         const developer1 =  this.questions$.filter(member =>  member.DocketTypeId === 2 && member.UserRole === 0 &&  member.AttributeType === 1)
         this.dataSource3 = developer1;
-        debugger
         const userRole1 = sessionStorage.getItem('userInfo')
         const data = JSON.parse(userRole1).userRoles
         data.forEach((item:any)=>{

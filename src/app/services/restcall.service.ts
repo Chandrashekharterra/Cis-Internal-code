@@ -1794,6 +1794,11 @@ export class RestcallService extends BaseService {
         return this.post(examination,url);
    }
 
+   saveDocket(docket){
+    const url = environment.docketListUrl + environment.saveDocket;
+    return this.post(docket,url);
+}
+
    getExaminationById(examination){
         return this.get(new HttpParams(),environment.uamBaseUrl + environment.getExaminationById + examination);
    }

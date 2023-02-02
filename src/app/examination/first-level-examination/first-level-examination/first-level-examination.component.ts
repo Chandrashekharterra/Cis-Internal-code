@@ -89,7 +89,7 @@ export class FirstLevelExaminationComponent implements OnInit {
      //this.AllData()
 
      this.myForm = this.fb.group({
-      ScrutinizerName: '',
+      scrutinizerName: '',
       examinerName:''  
     });
 
@@ -200,23 +200,52 @@ export class FirstLevelExaminationComponent implements OnInit {
   
 
 submitExamination(){
-this.questions$ = this.service.getUsers();
+  debugger
+ const questions$ =  this.allData;
+this.questions$ =  this.globalData;
 let dataAns2 =   this.addExaminerFormGroup.value.Answer2
 let dataAns1 =   this.addExaminerFormGroup.value.option
+const role3Data = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 3)
 const listData = this.questions$.filter(member => member.DocketTypeId === 2)
 const listData1 = this.questions$.filter(member => member.DocketTypeId === 3)
 const listData2 = this.questions$.filter(member => member.DocketTypeId === 4)
 const listData3 = this.questions$.filter(member => member.DocketTypeId === 5)
 const listData4 = this.questions$.filter(member => member.DocketTypeId === 6)
-
   const questions$1 = this.questions$.filter(member => member.DocketTypeId === 1)
+  const userData = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 1246 )
+ const dockettypeData = this.questions$.filter(member => member.DocketTypeId === 1 && member.AttributeType !== 2)
   let userRole1 = questions$1.filter(member => member.UserRole === 1244 && member.AttributeType === 2 )
  let data = userRole1.map((obj, i) => ({ ...obj, Answer2: dataAns2[i]?.Anss2,Answer1: dataAns1[i]?.options }));
 
 
-const submitData = [...userRole1,...listData,...listData1,...listData2,...listData3,...listData4]
+const submitData = [...data, ...role3Data, ...userData, ...dockettypeData, ...listData,...listData1,...listData2,...listData3,...listData4]
 
 console.log(submitData)
+
+const  postData = {
+
+  "description":this.allData.description,
+"docketName": this.allData.docketName,
+"docket_ID": this.allData.docket_ID,
+"examID": this.allData.examID,
+"examinerId": this.allData.examinerId,
+"examinerName": this.allData.examinerName,
+"paId": this.allData.paId,
+"pa_Name": this.allData.pa_Name,
+"scruitinizerId": this.allData.scruitinizerId,
+"scrutinizerName":this.allData.scrutinizerName,
+"docketListID":submitData,
+}
+this.restService.saveDocket(postData).subscribe(response => {
+
+  if (response.code === 50000) {
+    this.loaderService.display(false);
+    return;
+  }
+   else {
+    console.log(response,'llllllllllllllllllllllllllllllllll')
+   }
+  })
 
 }
 
@@ -240,9 +269,15 @@ console.log(submitData)
 
  
 
+ 
+
   get optionsectional() : FormArray {
     return this.addExaminersectionalFormGroup.get("optionsectional") as FormArray
   }
+
+ 
+
+  
 
  
   openDialogdigram(data:any,i:any){
@@ -339,10 +374,16 @@ console.log(submitData)
 
         this.questions$1 = response.attributeList;
         this.globalData = response.attributeList;
+        this.allData =  response
         
         this.examinerName = response.examinerName
         this.scrutinizerName = response.scrutinizerName
-        
+        // this.myForm = this.fb.group({
+        //   scrutinizerName: '',
+        //   examinerName:''
+          
+        // });
+        this.myForm.patchValue({examinerName:this.examinerName,scrutinizerName: this.scrutinizerName})
      //   this.myForm.patchValue(response)
        // this.myForm.patchValue( this.examinerName)
      
@@ -705,6 +746,25 @@ console.log(submitData)
     }
     return questionControlArray;
   }
+  
+
+  saveDocketData(){
+  const  postData = {
+
+    }
+    this.restService.saveDocket(postData).subscribe(response => {
+    
+      if (response.code === 50000) {
+        this.loaderService.display(false);
+        return;
+      }
+       else {
+        console.log(response,'llllllllllllllllllllllllllllllllll')
+       }
+      })
+  }
+
+ 
 
   
 
