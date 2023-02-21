@@ -515,7 +515,8 @@ export const environment = {
     getLdgResDetailDoc: 'lodgement/getLdgResDetailDoc?documentId=',
     getLodgementsList: 'lodgement/listLodgementDraft?processId=',
     checkoutLodgementDraft: 'lodgement/checkoutLodgementDraft?draftId=',
-    docketDraft: 'docketv2/getDocketById?Id=455',
+    docketlistid: 'docketv2/getDocketId?workflowId=',
+    docketDraft: 'docketv2/getDocketById?Id=',
     getLodgementDraftByWorkFlowId: 'lodgement/draft?workflowId=',
     deleteLodgementDraftByDraftId: 'lodgement/draft/',
     getALlDocumentForRequest: 'lodgement/getAllDocumentForRequest?requestId=',
@@ -536,7 +537,8 @@ export const environment = {
 
     /* Examination */
      saveExaminatiion: 'examination/saveExamination',
-     saveDocket: 'docketv2/updateDocket/?Id=455',
+     saveDocket: 'docketv2/updateDocket?docketId=479',
+     newsaveDocket: 'docketv2/addNewDocket',
      getExaminationById: 'examination/getExaminationById?examinationId=',
      getExaminationByWorkflowId: 'examination/getExaminationByWorkflowId?workflowId=',
 

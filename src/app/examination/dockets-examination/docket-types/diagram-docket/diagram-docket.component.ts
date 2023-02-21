@@ -26,7 +26,7 @@ export class DiagramDocketComponent implements OnInit,OnChanges {
 
 
   t(){
-    debugger;
+    
     this.diagramInformation;
     let j = 0;
      for (let i = 0; i< this.diagramInformation.length; i++) {

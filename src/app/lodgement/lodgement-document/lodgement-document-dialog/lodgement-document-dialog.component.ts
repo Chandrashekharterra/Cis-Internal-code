@@ -56,26 +56,22 @@ export class LodgementDocumentDialogComponent implements OnInit, AfterViewInit, 
   }
 
   ngOnInit(): void {
-    debugger;
     this.lodgementAction = "purpose";
     this.listItemsByListCodes();
   }
 
 
   listItemsByListCodes() {
-    debugger;
     this.loaderService.display(true);
     forkJoin([
       this.restService.getListItems(286),
       // this.restService.getListItems(387),
       this.restService.getListItems(388)
     ]).subscribe(([docData, RefrenceNumber]) => {
-      debugger;
       this.LodgementDocumentData = docData.data;
       this.filteredLodgementDocument.next(this.LodgementDocumentData.slice());
       // this.LodgementPurposeData = purposeData.data;
       // this.filteredLodgementPurpose.next(this.LodgementPurposeData.slice());
-       debugger;
       this.LodgementRefrenceNumber = RefrenceNumber.data;
       this.filteredRefrenceNumber.next(this.LodgementRefrenceNumber.slice());
       this.LodgementDocumentFilterCtrl.valueChanges
@@ -102,7 +98,6 @@ export class LodgementDocumentDialogComponent implements OnInit, AfterViewInit, 
   }
 
   changeDocument() {
-    debugger;
     this.loaderService.display(true);
     this.restService.getReservationSubType(387, this.lodgementDocument.itemId).subscribe(purposeData => {
       this.LodgementPurposeData = purposeData.data;
@@ -140,7 +135,6 @@ export class LodgementDocumentDialogComponent implements OnInit, AfterViewInit, 
   }
 
   protected setInitialRefrenceNumber() {
-    debugger;
     this.filteredRefrenceNumber
       .pipe(take(1), takeUntil(this._onDestroyRefrenceNumber))
       .subscribe(() => {
@@ -183,7 +177,6 @@ export class LodgementDocumentDialogComponent implements OnInit, AfterViewInit, 
   }
 
   protected filterRefrenceNumber() {
-    debugger;
     if (!this.LodgementRefrenceNumber) {
       return;
     }
@@ -206,7 +199,6 @@ export class LodgementDocumentDialogComponent implements OnInit, AfterViewInit, 
   }
 
   submit() {
-    debugger;
     if (this.lodgementAction == "purpose") {
       if (this.formPurpose.invalid) {
         this.formPurpose.get('lodgementDocument').markAsTouched();

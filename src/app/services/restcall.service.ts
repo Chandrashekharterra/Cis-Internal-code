@@ -1683,9 +1683,17 @@ export class RestcallService extends BaseService {
     getLodgementsList(draftId, userId) {
         return this.get(new HttpParams(), environment.uamBaseUrl + environment.getLodgementsList + draftId + '&userId=' + userId);
     }
-    getdocketList() {
-        return this.get(new HttpParams(), environment.docketListUrl + environment.docketDraft);
+    getdocketList(id:any) {
+        return this.get(new HttpParams(), environment.docketListUrl + environment.docketDraft + id);
+        
     }
+
+    getdocketListById(id:any) {
+        return this.get(new HttpParams(), environment.docketListUrl + environment.docketlistid + id);
+        debugger
+    }
+
+    docketlistid
 
     checkoutLodgementDraft(draftId, workflowId) {
         return this.get(new HttpParams(), environment.uamBaseUrl + environment.checkoutLodgementDraft + draftId + '&workflowId=' + workflowId);
@@ -1730,7 +1738,6 @@ export class RestcallService extends BaseService {
     }
 
     addStepsByReservationRef(draftId, referenceNo) {
-        debugger;
         let fileRefNo = "Moss";
         let name = "ShaylenLodgement";
         return this.get(new HttpParams(), environment.uamBaseUrl + environment.addStepsByReservationRef + draftId + '&referenceNo=' + referenceNo + '&fileRefNo='+ fileRefNo +'&name=' +name);
@@ -1773,7 +1780,6 @@ export class RestcallService extends BaseService {
        // return this.get();
     //}
     uploadDocument(file:File):Observable<any>{
-        debugger;
         const formData = new FormData();
         formData.append("File", file);
         return this.http.post( environment.uamBaseUrl + environment.uploadDocument, formData);
@@ -1797,7 +1803,12 @@ export class RestcallService extends BaseService {
    saveDocket(docket){
     const url = environment.docketListUrl + environment.saveDocket;
     return this.post(docket,url);
-}
+   }
+
+   newSaveDocket(docket){
+    const url = environment.docketListUrl + environment.newsaveDocket;
+    return this.post(docket,url);
+   }
 
    getExaminationById(examination){
         return this.get(new HttpParams(),environment.uamBaseUrl + environment.getExaminationById + examination);

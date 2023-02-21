@@ -99,13 +99,13 @@ export class LoginComponent implements OnInit {
                         const role = response.userRoles.filter(x => x.isPrimary === 1)[0];
                         this.restService.getSiteMapItemByRoleId(role.roleId)
                             .subscribe(async (res) => {
-                                debugger;
+                                
                                 this.restService.getHomePageSetting(response.userId).subscribe(homeInfo => {
-                                    debugger;
+                                   
                                     const data = res && res.data.privileges;
                                     const route = (homeInfo.data.homepage == null) ? 'home' : homeInfo.data.homepage,
                                         saveObjHome = homeInfo.data;
-                                        debugger;
+                                      
                                     sessionStorage.setItem(constants.StorageConstants.HOME_SETTINGS, JSON.stringify(saveObjHome));
                                     sessionStorage.setItem(constants.StorageConstants.MENU_ITEMS, JSON.stringify(data));
                                     sessionStorage.setItem(constants.StorageConstants.USERINFO, JSON.stringify(response));

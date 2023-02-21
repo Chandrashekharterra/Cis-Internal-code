@@ -20,7 +20,7 @@ export class PopUpComponent implements OnInit {
 
   constructor(private _mdr: MatDialogRef<PopUpComponent>,
     @Inject(MAT_DIALOG_DATA) data: any) {
-      debugger
+      
       if(data.Anss2){
         this.Anss2 = data?.Anss2;
       }

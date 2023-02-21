@@ -48,6 +48,8 @@ export class TaskDetailsExaminationComponent implements OnInit {
           this.router.navigate(['/home']);
         } 
       this.examData = this.router.getCurrentNavigation().extras.state.examData;
+      localStorage.setItem('idData',JSON.stringify(this.examData));
+      debugger
       this.getExaminationDetailsByWorkflowId();
     }
 

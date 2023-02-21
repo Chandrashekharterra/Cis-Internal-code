@@ -39,6 +39,8 @@ export class ChildComponent implements OnInit {
   questions$1: any;
   examinerName: any;
   scrutinizerName: any;
+  idData: any;
+  newDocketIdData:any
 
 
  
@@ -70,12 +72,16 @@ export class ChildComponent implements OnInit {
   
 
   ngOnInit(): void {
+    
+    this.idData = JSON.parse(localStorage.getItem('idData'));
+    this.newDocketIdData = this.service.getUsers();
+    const docketIdData  = this.newDocketIdData[0].docketId
     this.myForm = this.fb.group({
       scrutinizerName: '',
       examinerName:''
       
     });
-    this.getdocketList()
+    this.getdocketList(docketIdData)
 // const data23 =  this.questions$1
   //  this.question = this.service.getUsers();
 
@@ -285,9 +291,9 @@ export class ChildComponent implements OnInit {
 
 
   
-  getdocketList() {
+  getdocketList(id:any) {
     this.loaderService.display(true);
-    this.restService.getdocketList().subscribe(response => {
+    this.restService.getdocketList(id).subscribe(response => {
     
       if (response.code === 50000) {
         this.loaderService.display(false);

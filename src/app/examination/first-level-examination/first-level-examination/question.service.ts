@@ -16,6 +16,11 @@ export class QuestionService {
   "paId": 1961
 
      questions: any = [
+        {
+        
+         "docketId": 2,
+        },
+        
       {
         "name": "ERF 4343",
         "description": "Umlazi Subdivion",
@@ -8275,6 +8280,7 @@ export class QuestionService {
       "DocketTypeId": 2,
       "Required": true
   }
+
    
 
     ];

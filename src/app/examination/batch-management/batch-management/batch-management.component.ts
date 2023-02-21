@@ -42,7 +42,6 @@ export class BatchManagementComponent implements OnInit {
   }
 
   issueBatch() {
-    debugger;
     const obj = {
       'userId': this.taskDetails.userId,
       'provinceId':this.taskDetails.provinceId,

@@ -66,6 +66,8 @@ export class FirstLevelExaminationComponent implements OnInit {
   myForm: FormGroup;
   examinerName:any
   scrutinizerName:any
+  idData:any
+  newDocketIdData:any
 
  
   constructor( private service: QuestionService,public fb: FormBuilder,
@@ -85,7 +87,11 @@ export class FirstLevelExaminationComponent implements OnInit {
 
   ngOnInit(): void {
    
-   
+    this.idData = JSON.parse(localStorage.getItem('idData'));
+    this.newDocketIdData = this.service.getUsers();
+    const docketIdData  = this.newDocketIdData[0].docketId
+   // this.getdocketListById(this.idData.workflowId)
+   debugger
      //this.AllData()
 
      this.myForm = this.fb.group({
@@ -139,7 +145,7 @@ export class FirstLevelExaminationComponent implements OnInit {
        AnswerServitudePlan1:  this.Ans2GroupsGereralPlanServitudePlan1
       })
 
-      this.getdocketList()
+      this.getdocketList(docketIdData)
   
   
 
@@ -200,11 +206,91 @@ export class FirstLevelExaminationComponent implements OnInit {
   
 
 submitExamination(){
-  debugger
+      const questions$ =  this.allData;
+      this.questions$ =  this.globalData;
+      let dataAns2 =   this.addExaminerFormGroup.value.Answer2
+      let dataAns1 =   this.addExaminerFormGroup.value.option
+      const role3Data = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 3)
+      const listData = this.questions$.filter(member => member.DocketTypeId === 2)
+      const listData1 = this.questions$.filter(member => member.DocketTypeId === 3)
+      const listData2 = this.questions$.filter(member => member.DocketTypeId === 4)
+      const listData3 = this.questions$.filter(member => member.DocketTypeId === 5)
+      const listData4 = this.questions$.filter(member => member.DocketTypeId === 6)
+        const questions$1 = this.questions$.filter(member => member.DocketTypeId === 1)
+        const userData = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 1246 )
+       const dockettypeData = this.questions$.filter(member => member.DocketTypeId === 1 && member.AttributeType !== 2)
+        let userRole1 = questions$1.filter(member => member.UserRole === 1244 && member.AttributeType === 2 )
+       let data = userRole1.map((obj, i) => ({ ...obj, Answer2: dataAns2[i]?.Anss2,Answer1: dataAns1[i]?.options }));
+      
+      
+      const submitData = [...data, ...role3Data, ...userData, ...dockettypeData, ...listData,...listData1,...listData2,...listData3,...listData4]
+      
+      console.log(submitData)
+      
+      if(this.idData.nodeId !==0){
+        const  postData = {
+      
+          "description":this.allData.description,
+        "docketName": this.allData.docketName,
+        "docket_ID": this.allData.docket_ID,
+        "examID": this.allData.examID,
+        "examinerId": this.allData.examinerId,
+        "examinerName": this.allData.examinerName,
+        "paId": this.allData.paId,
+        "pa_Name": this.allData.pa_Name,
+        "scruitinizerId": this.allData.scruitinizerId,
+        "scrutinizerName":this.allData.scrutinizerName,
+        "attributeList":submitData,
+        }
+        this.restService.saveDocket(postData).subscribe(response => {
+        
+          if (response.code === 50000) {
+            this.loaderService.display(false);
+            return;
+          }
+           else {
+            console.log(response,'llllllllllllllllllllllllllllllllll')
+           }
+          })
+
+      }else{
+        const  postData = {
+      
+          "description":this.allData.description,
+        "docketName": this.allData.docketName,
+        "docket_ID": this.allData.docket_ID,
+        "examID": this.allData.examID,
+        "examinerId": this.allData.examinerId,
+        "examinerName": this.allData.examinerName,
+        "paId": this.allData.paId,
+        "pa_Name": this.allData.pa_Name,
+        "scruitinizerId": this.allData.scruitinizerId,
+        "scrutinizerName":this.allData.scrutinizerName,
+        "attributeList":submitData,
+        }
+        this.restService.newSaveDocket(postData).subscribe(response => {
+        
+          if (response.code === 50000) {
+            this.loaderService.display(false);
+            return;
+          }
+           else {
+            console.log(response,'llllllllllllllllllllllllllllllllll')
+           }
+          })
+      }
+     
+    
+  
+
+
+}
+
+submitScrutinizor(){
  const questions$ =  this.allData;
 this.questions$ =  this.globalData;
-let dataAns2 =   this.addExaminerFormGroup.value.Answer2
-let dataAns1 =   this.addExaminerFormGroup.value.option
+let dataAns2 =   this.addScrutinizerFormGroup.value.Answer3
+let dataAns1 =   this.addScrutinizerFormGroup.value.option1
 const role3Data = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 3)
 const listData = this.questions$.filter(member => member.DocketTypeId === 2)
 const listData1 = this.questions$.filter(member => member.DocketTypeId === 3)
@@ -212,10 +298,140 @@ const listData2 = this.questions$.filter(member => member.DocketTypeId === 4)
 const listData3 = this.questions$.filter(member => member.DocketTypeId === 5)
 const listData4 = this.questions$.filter(member => member.DocketTypeId === 6)
   const questions$1 = this.questions$.filter(member => member.DocketTypeId === 1)
-  const userData = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 1246 )
+  const userData = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 1244 )
  const dockettypeData = this.questions$.filter(member => member.DocketTypeId === 1 && member.AttributeType !== 2)
-  let userRole1 = questions$1.filter(member => member.UserRole === 1244 && member.AttributeType === 2 )
- let data = userRole1.map((obj, i) => ({ ...obj, Answer2: dataAns2[i]?.Anss2,Answer1: dataAns1[i]?.options }));
+  let userRole1 = questions$1.filter(member => member.UserRole === 1246 && member.AttributeType === 2 )
+ let data = userRole1.map((obj, i) => ({ ...obj, Answer2: dataAns2[i]?.Anss3,Answer1: dataAns1[i]?.option1 }));
+
+
+const submitData = [...data, ...role3Data, ...userData, ...dockettypeData, ...listData,...listData1,...listData2,...listData3,...listData4]
+
+console.log(submitData)
+if(this.idData.nodeId !==0){
+  const  postData = {
+
+    "description":this.allData.description,
+  "docketName": this.allData.docketName,
+  "docket_ID": this.allData.docket_ID,
+  "examID": this.allData.examID,
+  "examinerId": this.allData.examinerId,
+  "examinerName": this.allData.examinerName,
+  "paId": this.allData.paId,
+  "pa_Name": this.allData.pa_Name,
+  "scruitinizerId": this.allData.scruitinizerId,
+  "scrutinizerName":this.allData.scrutinizerName,
+  "attributeList":submitData,
+  }
+  this.restService.saveDocket(postData).subscribe(response => {
+  
+    if (response.code === 50000) {
+      this.loaderService.display(false);
+      return;
+    }
+     else {
+      console.log(response,'llllllllllllllllllllllllllllllllll')
+     }
+    })
+}else{
+  const  postData = {
+
+    "description":this.allData.description,
+  "docketName": this.allData.docketName,
+  "docket_ID": this.allData.docket_ID,
+  "examID": this.allData.examID,
+  "examinerId": this.allData.examinerId,
+  "examinerName": this.allData.examinerName,
+  "paId": this.allData.paId,
+  "pa_Name": this.allData.pa_Name,
+  "scruitinizerId": this.allData.scruitinizerId,
+  "scrutinizerName":this.allData.scrutinizerName,
+  "attributeList":submitData,
+  }
+  this.restService.newSaveDocket(postData).subscribe(response => {
+  
+    if (response.code === 50000) {
+      this.loaderService.display(false);
+      return;
+    }
+     else {
+      console.log(response,'llllllllllllllllllllllllllllllllll')
+     }
+    })
+}
+
+
+}
+
+
+submitExaminationsectional(){
+  const questions$ =  this.allData;
+  this.questions$ =  this.globalData;
+  let dataAns2 =   this.addExaminersectionalFormGroup.value.Answersectional
+  let dataAns1 =   this.addExaminersectionalFormGroup.value.optionsectional
+  const role3Data = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 3)
+  const listData = this.questions$.filter(member => member.DocketTypeId === 2)
+  const listData1 = this.questions$.filter(member => member.DocketTypeId === 3)
+  const listData2 = this.questions$.filter(member => member.DocketTypeId === 4)
+  const listData3 = this.questions$.filter(member => member.DocketTypeId === 5)
+  const listData4 = this.questions$.filter(member => member.DocketTypeId === 6)
+    const questions$1 = this.questions$.filter(member => member.DocketTypeId === 1)
+    const userData = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 1246 )
+   const dockettypeData = this.questions$.filter(member => member.DocketTypeId === 1 && member.AttributeType !== 2)
+    let userRole1 = questions$1.filter(member => member.UserRole === 1244 && member.AttributeType === 2 )
+   let data = userRole1.map((obj, i) => ({ ...obj, Answer2: dataAns2[i]?.Anss3sectional,Answer1: dataAns1[i]?.optionssectional }));
+  
+  
+  const submitData = [...data, ...role3Data, ...userData, ...dockettypeData, ...listData,...listData1,...listData2,...listData3,...listData4]
+  
+  console.log(submitData)
+  
+  const  postData = {
+  
+    "description":this.allData.description,
+  "docketName": this.allData.docketName,
+  "docket_ID": this.allData.docket_ID,
+  "examID": this.allData.examID,
+  "examinerId": this.allData.examinerId,
+  "examinerName": this.allData.examinerName,
+  "paId": this.allData.paId,
+  "pa_Name": this.allData.pa_Name,
+  "scruitinizerId": this.allData.scruitinizerId,
+  "scrutinizerName":this.allData.scrutinizerName,
+  "attributeList":submitData,
+  }
+  this.restService.saveDocket(postData).subscribe(response => {
+  
+    if (response.code === 50000) {
+      this.loaderService.display(false);
+      return;
+    }
+     else {
+      console.log(response,'llllllllllllllllllllllllllllllllll')
+     }
+    })
+
+
+
+
+}
+
+submitScrutinizorsectional(){
+  
+ const questions$ =  this.allData;
+this.questions$ =  this.globalData;
+let dataAns2 =   this.addScrutinizersectionalFormGroup.value.Answer3sectional1
+let dataAns1 =   this.addScrutinizersectionalFormGroup.value.option1sectional1
+const role3Data = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 3)
+const listData = this.questions$.filter(member => member.DocketTypeId === 2)
+const listData1 = this.questions$.filter(member => member.DocketTypeId === 3)
+const listData2 = this.questions$.filter(member => member.DocketTypeId === 4)
+const listData3 = this.questions$.filter(member => member.DocketTypeId === 5)
+const listData4 = this.questions$.filter(member => member.DocketTypeId === 6)
+  const questions$1 = this.questions$.filter(member => member.DocketTypeId === 1)
+  const userData = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 1244 )
+ const dockettypeData = this.questions$.filter(member => member.DocketTypeId === 1 && member.AttributeType !== 2)
+  let userRole1 = questions$1.filter(member => member.UserRole === 1246 && member.AttributeType === 2 )
+ let data = userRole1.map((obj, i) => ({ ...obj, Answer2: dataAns2[i]?.Anss3sectional1,Answer1: dataAns1[i]?.optionssectional1 }));
 
 
 const submitData = [...data, ...role3Data, ...userData, ...dockettypeData, ...listData,...listData1,...listData2,...listData3,...listData4]
@@ -234,7 +450,7 @@ const  postData = {
 "pa_Name": this.allData.pa_Name,
 "scruitinizerId": this.allData.scruitinizerId,
 "scrutinizerName":this.allData.scrutinizerName,
-"docketListID":submitData,
+"attributeList":submitData,
 }
 this.restService.saveDocket(postData).subscribe(response => {
 
@@ -249,6 +465,211 @@ this.restService.saveDocket(postData).subscribe(response => {
 
 }
 
+
+submitExaminationgeneral(){
+  const questions$ =  this.allData;
+  this.questions$ =  this.globalData;
+  let dataAns2 =   this.addExaminerGeneralPlanFormGroup.value.AnswerGeneralPlan
+  let dataAns1 =   this.addExaminerGeneralPlanFormGroup.value.optionGeneralPlan
+  const role3Data = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 3)
+  const listData = this.questions$.filter(member => member.DocketTypeId === 2)
+  const listData1 = this.questions$.filter(member => member.DocketTypeId === 3)
+  const listData2 = this.questions$.filter(member => member.DocketTypeId === 4)
+  const listData3 = this.questions$.filter(member => member.DocketTypeId === 5)
+  const listData4 = this.questions$.filter(member => member.DocketTypeId === 6)
+    const questions$1 = this.questions$.filter(member => member.DocketTypeId === 1)
+    const userData = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 1246 )
+   const dockettypeData = this.questions$.filter(member => member.DocketTypeId === 1 && member.AttributeType !== 2)
+    let userRole1 = questions$1.filter(member => member.UserRole === 1244 && member.AttributeType === 2 )
+   let data = userRole1.map((obj, i) => ({ ...obj, Answer2: dataAns2[i]?.Anss3GereralPlan1,Answer1: dataAns1[i]?.optionsGereralPlan1 }));
+  
+  
+  const submitData = [...data, ...role3Data, ...userData, ...dockettypeData, ...listData,...listData1,...listData2,...listData3,...listData4]
+  
+  console.log(submitData)
+  
+  const  postData = {
+  
+    "description":this.allData.description,
+  "docketName": this.allData.docketName,
+  "docket_ID": this.allData.docket_ID,
+  "examID": this.allData.examID,
+  "examinerId": this.allData.examinerId,
+  "examinerName": this.allData.examinerName,
+  "paId": this.allData.paId,
+  "pa_Name": this.allData.pa_Name,
+  "scruitinizerId": this.allData.scruitinizerId,
+  "scrutinizerName":this.allData.scrutinizerName,
+  "attributeList":submitData,
+  }
+  this.restService.saveDocket(postData).subscribe(response => {
+  
+    if (response.code === 50000) {
+      this.loaderService.display(false);
+      return;
+    }
+     else {
+      console.log(response,'llllllllllllllllllllllllllllllllll')
+     }
+    })
+
+
+
+
+}
+
+
+submitScrutinizorgeneral(){
+  
+ const questions$ =  this.allData;
+this.questions$ =  this.globalData;
+let dataAns2 =   this.addScrutinizerGeneralPlanFormGroup.value.AnswerGeneralPlan1
+let dataAns1 =   this.addScrutinizerGeneralPlanFormGroup.value.optionsGereralPlan
+const role3Data = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 3)
+const listData = this.questions$.filter(member => member.DocketTypeId === 2)
+const listData1 = this.questions$.filter(member => member.DocketTypeId === 3)
+const listData2 = this.questions$.filter(member => member.DocketTypeId === 4)
+const listData3 = this.questions$.filter(member => member.DocketTypeId === 5)
+const listData4 = this.questions$.filter(member => member.DocketTypeId === 6)
+  const questions$1 = this.questions$.filter(member => member.DocketTypeId === 1)
+  const userData = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 1244 )
+ const dockettypeData = this.questions$.filter(member => member.DocketTypeId === 1 && member.AttributeType !== 2)
+  let userRole1 = questions$1.filter(member => member.UserRole === 1246 && member.AttributeType === 2 )
+ let data = userRole1.map((obj, i) => ({ ...obj, Answer2: dataAns2[i]?.Anss3GereralPlan,Answer1: dataAns1[i]?.optionsGereralPlan }));
+
+
+const submitData = [...data, ...role3Data, ...userData, ...dockettypeData, ...listData,...listData1,...listData2,...listData3,...listData4]
+
+console.log(submitData)
+
+const  postData = {
+
+  "description":this.allData.description,
+"docketName": this.allData.docketName,
+"docket_ID": this.allData.docket_ID,
+"examID": this.allData.examID,
+"examinerId": this.allData.examinerId,
+"examinerName": this.allData.examinerName,
+"paId": this.allData.paId,
+"pa_Name": this.allData.pa_Name,
+"scruitinizerId": this.allData.scruitinizerId,
+"scrutinizerName":this.allData.scrutinizerName,
+"attributeList":submitData,
+}
+this.restService.saveDocket(postData).subscribe(response => {
+
+  if (response.code === 50000) {
+    this.loaderService.display(false);
+    return;
+  }
+   else {
+    console.log(response,'llllllllllllllllllllllllllllllllll')
+   }
+  })
+
+}
+
+submitExaminationserver(){
+  const questions$ =  this.allData;
+  this.questions$ =  this.globalData;
+  let dataAns2 =   this.addExaminerServitudePlanFormGroup.value.AnswerServitudePlan
+  let dataAns1 =   this.addExaminerServitudePlanFormGroup.value.optionServitudePlan
+  const role3Data = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 3)
+  const listData = this.questions$.filter(member => member.DocketTypeId === 2)
+  const listData1 = this.questions$.filter(member => member.DocketTypeId === 3)
+  const listData2 = this.questions$.filter(member => member.DocketTypeId === 4)
+  const listData3 = this.questions$.filter(member => member.DocketTypeId === 5)
+  const listData4 = this.questions$.filter(member => member.DocketTypeId === 6)
+    const questions$1 = this.questions$.filter(member => member.DocketTypeId === 1)
+    const userData = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 1246 )
+   const dockettypeData = this.questions$.filter(member => member.DocketTypeId === 1 && member.AttributeType !== 2)
+    let userRole1 = questions$1.filter(member => member.UserRole === 1244 && member.AttributeType === 2 )
+   let data = userRole1.map((obj, i) => ({ ...obj, Answer2: dataAns2[i]?.Anss3ServitudePlan,Answer1: dataAns1[i]?.optionsServitudePlan }));
+  
+  
+  const submitData = [...data, ...role3Data, ...userData, ...dockettypeData, ...listData,...listData1,...listData2,...listData3,...listData4]
+  
+  console.log(submitData)
+  
+  const  postData = {
+  
+    "description":this.allData.description,
+  "docketName": this.allData.docketName,
+  "docket_ID": this.allData.docket_ID,
+  "examID": this.allData.examID,
+  "examinerId": this.allData.examinerId,
+  "examinerName": this.allData.examinerName,
+  "paId": this.allData.paId,
+  "pa_Name": this.allData.pa_Name,
+  "scruitinizerId": this.allData.scruitinizerId,
+  "scrutinizerName":this.allData.scrutinizerName,
+  "attributeList":submitData,
+  }
+  this.restService.saveDocket(postData).subscribe(response => {
+  
+    if (response.code === 50000) {
+      this.loaderService.display(false);
+      return;
+    }
+     else {
+      console.log(response,'llllllllllllllllllllllllllllllllll')
+     }
+    })
+
+
+
+
+}
+
+submitScrutinizorserver(){
+  
+ const questions$ =  this.allData;
+this.questions$ =  this.globalData;
+let dataAns2 =   this.addScrutinizerServitudePlanFormGroup.value.AnswerServitudePlan1
+let dataAns1 =   this.addScrutinizerServitudePlanFormGroup.value.optionServitudePlan1
+const role3Data = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 3)
+const listData = this.questions$.filter(member => member.DocketTypeId === 2)
+const listData1 = this.questions$.filter(member => member.DocketTypeId === 3)
+const listData2 = this.questions$.filter(member => member.DocketTypeId === 4)
+const listData3 = this.questions$.filter(member => member.DocketTypeId === 5)
+const listData4 = this.questions$.filter(member => member.DocketTypeId === 6)
+  const questions$1 = this.questions$.filter(member => member.DocketTypeId === 1)
+  const userData = this.questions$.filter(member => member.DocketTypeId === 1 && member.UserRole === 1244 )
+ const dockettypeData = this.questions$.filter(member => member.DocketTypeId === 1 && member.AttributeType !== 2)
+  let userRole1 = questions$1.filter(member => member.UserRole === 1246 && member.AttributeType === 2 )
+ let data = userRole1.map((obj, i) => ({ ...obj, Answer2: dataAns2[i]?.Anss3ServitudePlan1,Answer1: dataAns1[i]?.optionsServitudePlan1 }));
+
+
+const submitData = [...data, ...role3Data, ...userData, ...dockettypeData, ...listData,...listData1,...listData2,...listData3,...listData4]
+
+console.log(submitData)
+
+const  postData = {
+
+  "description":this.allData.description,
+"docketName": this.allData.docketName,
+"docket_ID": this.allData.docket_ID,
+"examID": this.allData.examID,
+"examinerId": this.allData.examinerId,
+"examinerName": this.allData.examinerName,
+"paId": this.allData.paId,
+"pa_Name": this.allData.pa_Name,
+"scruitinizerId": this.allData.scruitinizerId,
+"scrutinizerName":this.allData.scrutinizerName,
+"attributeList":submitData,
+}
+this.restService.saveDocket(postData).subscribe(response => {
+
+  if (response.code === 50000) {
+    this.loaderService.display(false);
+    return;
+  }
+   else {
+    console.log(response,'llllllllllllllllllllllllllllllllll')
+   }
+  })
+
+}
  
 
    
@@ -256,10 +677,17 @@ this.restService.saveDocket(postData).subscribe(response => {
     return this.addExaminerFormGroup.get("Answer2") as FormArray
   }
 
+  get Answer3() : FormArray {
+    return this.addExaminerFormGroup.get("Answer3") as FormArray
+  }
  
 
   get options() : FormArray {
     return this.addExaminerFormGroup.get("option") as FormArray
+  }
+
+  get option1() : FormArray {
+    return this.addExaminerFormGroup.get("option1") as FormArray
   }
 
 
@@ -361,9 +789,9 @@ this.restService.saveDocket(postData).subscribe(response => {
   }
 
 
-  getdocketList() {
+  getdocketList(id:any) {
     this.loaderService.display(true);
-    this.restService.getdocketList().subscribe(response => {
+    this.restService.getdocketList(id).subscribe(response => {
     
       if (response.code === 50000) {
         this.loaderService.display(false);
@@ -530,6 +958,14 @@ this.restService.saveDocket(postData).subscribe(response => {
     });
   }
  
+  getdocketListById(id:any) {
+    this.loaderService.display(true);
+    this.restService.getdocketListById(id).subscribe(response => {
+    
+     console.log(response)
+        this.loaderService.display(false);
+    })
+  }
 
   getOptions() { 
     this.questions$ =   this.globalData  ;
